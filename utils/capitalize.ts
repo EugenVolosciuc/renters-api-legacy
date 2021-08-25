@@ -1,0 +1,1 @@
+export const capitalize = ([firstChar, ...rest]) => `${firstChar.toUpperCase()}${rest.join('')}`
