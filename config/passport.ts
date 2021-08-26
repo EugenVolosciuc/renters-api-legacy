@@ -20,12 +20,10 @@ export const initializePassport = function () {
             try {
                 const user = await userRepository
                     .createQueryBuilder("user")
-                    .select('user.email')
+                    .select('user')
                     .addSelect('user.password')
                     .where("user.email = :email", { email })
                     .getOneOrFail()
-
-                // const user = await userRepository.findOne({ email })
 
                 const correctCredentials = await bcrypt.compare(password, user.password)
 

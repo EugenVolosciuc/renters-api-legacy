@@ -23,7 +23,7 @@ export const handleError = (err: any, res: Response) => {
         return res.status(statusCode || 500).json({
             status: "error",
             ...(err.code && { errorCode: err.code }),
-            ...(statusCode === 400 && { errors: message }),
+            ...(statusCode === 400 && { error: message }),
             ...(statusCode !== 400 && { message })
         });
     }
