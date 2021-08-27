@@ -18,8 +18,13 @@ export class Photo {
     @IsUrl()
     url: string;
 
+    @Column({ enum: ITEM_TYPE })
+    type: ITEM_TYPE;
+
     @ManyToOne(() => Property, property => property.photos, { nullable: true })
     property: Property;
+
+    // TODO: add bill relation here
 
     @BeforeInsert()
     async validatePhoto() {

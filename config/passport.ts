@@ -8,6 +8,8 @@ import { ErrorHandler } from "../utils/errorHandler"
 
 const LocalStrategy = passportLocal.Strategy
 
+export const SESSION_COOKIE_NAME = "renters_session"
+
 export const initializePassport = function () {
     const userRepository = getConnection().getRepository(User)
 

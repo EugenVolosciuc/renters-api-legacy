@@ -22,8 +22,20 @@ export class Property {
     @Column({ nullable: true })
     description: string;
 
-    @Column({ nullable: true })
-    numberOfRooms: number;
+    @Column({ nullable: true, type: 'int' })
+    rooms: number;
+
+    @Column()
+    address: string;
+
+    @Column({ nullable: true, type: 'int' })
+    floors: number;
+
+    @Column({ nullable: true, type: 'real' })
+    floorArea: number;
+
+    @Column({ type: 'real' })
+    rentPrice: number;
 
     @OneToOne(() => User)
     @JoinColumn()

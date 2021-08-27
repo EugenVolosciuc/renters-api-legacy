@@ -4,6 +4,8 @@ import passport from 'passport'
 
 import { User } from '../database/entities/user'
 import { ErrorHandler } from '../utils/errorHandler'
+import { SESSION_COOKIE_NAME } from '../config/passport'
+import { getHostname } from '../utils/getHostname'
 
 // @desc    Get logged in user
 // @route   GET /users/me
@@ -79,6 +81,8 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 // @access  Private
 export const logoutUser = async (req: Request, res: Response, _next: NextFunction) => {
     req.logout()
+    req.session.destroy(() => null)
+    res.clearCookie(SESSION_COOKIE_NAME, { path: '/', domain: getHostname(req.get('host')) })
     res.json()
 }
 

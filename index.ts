@@ -9,7 +9,7 @@ import { pagination } from 'typeorm-pagination'
 
 import { connect } from './database/connect'
 import { handleError } from './utils/errorHandler'
-import { initializePassport } from './config/passport'
+import { initializePassport, SESSION_COOKIE_NAME } from './config/passport'
 import * as routes from './routes'
 
 require('dotenv').config()
@@ -53,7 +53,7 @@ const RedisStore = connectRedis(session);
         proxy: true,
         secret: process.env.SESSION_SECRET,
         resave: false,
-        name: "renters_session",
+        name: SESSION_COOKIE_NAME,
         cookie: {
             secure: isProduction ? true : false,
             sameSite: isProduction ? 'none' : false,
