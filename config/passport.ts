@@ -16,9 +16,6 @@ export const initializePassport = function () {
     passport.use(new LocalStrategy(
         { usernameField: 'email', passwordField: 'password' },
         async (email, password, done) => {
-            console.log("email", email)
-            console.log("password", password)
-
             try {
                 const user = await userRepository
                     .createQueryBuilder("user")
@@ -35,7 +32,6 @@ export const initializePassport = function () {
                     throw new ErrorHandler(400, 'Incorrect credentials')
                 }
             } catch (error) {
-                console.log('error here', error)
                 done(null, false)
             }
         }

@@ -25,7 +25,7 @@ export const uploadPhoto = async (req: Request, res: Response, next: NextFunctio
         })
         const result = await photoRepository.save(photoDBInstance)
 
-        res.send(result)
+        res.status(201).send(result)
     } catch (error) {
         next(error)
     }
