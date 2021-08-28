@@ -4,9 +4,20 @@ import { IsUrl } from 'class-validator'
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
 import { Property } from './property';
 
-export enum ITEM_TYPE {
+export enum PHOTO_TYPE {
     PROPERTY = "PROPERTY",
     BILL = "BILL"
+}
+
+export interface PhotoData {
+    fieldname: PHOTO_TYPE,
+    originalname: string,
+    encoding: string,
+    mimetype: string,
+    destination: string,
+    filename: string,
+    path: string,
+    size: number
 }
 
 @Entity()
@@ -15,11 +26,17 @@ export class Photo {
     id: number;
 
     @Column()
+    public_id: string;
+
+    @Column()
     @IsUrl()
     url: string;
 
-    @Column({ enum: ITEM_TYPE })
-    type: ITEM_TYPE;
+    @Column({ enum: PHOTO_TYPE })
+    type: PHOTO_TYPE;
+
+    @Column()
+    title: string;
 
     @ManyToOne(() => Property, property => property.photos, { nullable: true })
     property: Property;

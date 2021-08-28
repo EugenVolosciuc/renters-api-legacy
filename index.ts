@@ -7,10 +7,11 @@ import connectRedis from 'connect-redis'
 import passport from 'passport'
 import { pagination } from 'typeorm-pagination'
 
+import * as routes from './routes'
 import { connect } from './database/connect'
 import { handleError } from './utils/errorHandler'
 import { initializePassport, SESSION_COOKIE_NAME } from './config/passport'
-import * as routes from './routes'
+import { configureCloudinary } from './config/cloudinary'
 
 require('dotenv').config()
 
@@ -23,6 +24,9 @@ const RedisStore = connectRedis(session);
     // CONFIG
     app.use(express.json())
     app.use(pagination)
+
+    // Cloudinary
+    configureCloudinary()
 
     // Redis config
     let redisClient: RedisClient
@@ -72,6 +76,7 @@ const RedisStore = connectRedis(session);
     // ROUTES
     app.use('/users', routes.userRoutes)
     app.use('/properties', routes.propertyRoutes)
+    app.use('/photos', routes.photoRoutes)
 
     // ERROR HANDLING
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

@@ -25,8 +25,14 @@ export class Property {
     @Column({ nullable: true, type: 'int' })
     rooms: number;
 
+    @Column({ enum: PROPERTY_TYPES })
+    type: PROPERTY_TYPES;
+
     @Column()
     address: string;
+
+    @Column({ nullable: true, type: 'int' })
+    floor: number;
 
     @Column({ nullable: true, type: 'int' })
     floors: number;
@@ -60,12 +66,12 @@ export class Property {
             BILL_TYPES.WATER
         ]
     })
-    billTypes: BILL_TYPES
+    billTypes: BILL_TYPES;
 
-    @OneToMany(() => Photo, photo => photo.property, { cascade: true })
+    @OneToMany(() => Photo, photo => photo.property, { cascade: true, nullable: true })
     photos: Photo[];
 
-    @OneToMany(() => Bill, bill => bill.property, { cascade: true })
+    @OneToMany(() => Bill, bill => bill.property, { cascade: true, nullable: true })
     bills: Bill[];
 
     @BeforeInsert()
