@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, JoinColumn, OneToMany } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm'
 
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
 import { User } from './user'
@@ -43,7 +43,8 @@ export class Property {
     @Column({ type: 'real' })
     rentPrice: number;
 
-    @OneToOne(() => User)
+    // @OneToOne(() => User)
+    @ManyToOne(() => User, administrator => administrator.administratedProperties, { nullable: true })
     @JoinColumn()
     administrator: User;
 

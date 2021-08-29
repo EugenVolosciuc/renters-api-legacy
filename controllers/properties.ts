@@ -20,10 +20,22 @@ export const getPropertiesOfLoggedUser = async (req: Request, res: Response, nex
                 query = 'property.administratorId = :id'
         }
 
-        const properties = await propertyRepository
+        const filters = [
+            { key: 'type', value: req.query.type }
+        ].filter(filterType => !!filterType.value)
+
+        let initialQuery = propertyRepository
             .createQueryBuilder('property')
             .where(query, { id: (req.user as User).id })
-            .paginate()
+
+        filters.forEach(({ key, value }) => {
+            initialQuery = initialQuery.andWhere(
+                `property.${key} = :${key}`,
+                { [key]: value }
+            )
+        })
+
+        const properties = await initialQuery.paginate()
 
         return res.send(properties)
     } catch (error) {
@@ -39,7 +51,7 @@ export const getPropertyByID = async (req: Request, res: Response, next: NextFun
         const propertyRepository = getConnection().getRepository(Property)
 
         const property = await propertyRepository.findOne(
-            req.params.id, 
+            req.params.id,
             { relations: ['administrator', 'renter'] }
         )
 
@@ -83,7 +95,7 @@ export const modifyProperty = async (req: Request, res: Response, next: NextFunc
         }
 
         await propertyRepository.update(propertyID, req.body)
-        const updatedProperty = {...property, ...req.body}
+        const updatedProperty = { ...property, ...req.body }
 
         return res.send(updatedProperty)
     } catch (error) {
