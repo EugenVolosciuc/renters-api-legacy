@@ -26,6 +26,7 @@ export const getPropertiesOfLoggedUser = async (req: Request, res: Response, nex
 
         let initialQuery = propertyRepository
             .createQueryBuilder('property')
+            .leftJoinAndSelect('property.photos', 'photos')
             .where(query, { id: (req.user as User).id })
 
         filters.forEach(({ key, value }) => {
@@ -52,7 +53,7 @@ export const getPropertyByID = async (req: Request, res: Response, next: NextFun
 
         const property = await propertyRepository.findOne(
             req.params.id,
-            { relations: ['administrator', 'renter'] }
+            { relations: ['administrator', 'renter', 'photos'] }
         )
 
         return res.send(property)
