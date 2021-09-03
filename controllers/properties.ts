@@ -56,6 +56,8 @@ export const getPropertyByID = async (req: Request, res: Response, next: NextFun
             { relations: ['administrator', 'renter', 'photos'] }
         )
 
+        if (!property) throw new ErrorHandler(404, `Could not find property with id ${req.params.id}`)
+
         return res.send(property)
     } catch (error) {
         next(error)
