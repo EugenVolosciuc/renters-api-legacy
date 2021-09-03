@@ -14,7 +14,7 @@ const cronJobList = [
     }
 ]
 
-export const initializedCronJobs: Record<string, Job> = {}
+export const initializedCronJobs: Record<CronJob['id'], Job> = {}
 
 export const initializeCronJobs = async () => {
     const cronJobRepository = getConnection().getRepository(CronJob)
