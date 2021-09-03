@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm'
 
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
-import { User } from './user'
-import { Photo } from './photo'
-import { Bill, BILL_TYPES } from './bill'
+import { User } from './User'
+import { Photo } from './Photo'
+import { Bill, BILL_TYPES } from './Bill'
 
 export enum PROPERTY_TYPES {
     HOUSE = "HOUSE",

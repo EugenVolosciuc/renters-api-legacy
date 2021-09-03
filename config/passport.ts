@@ -3,7 +3,7 @@ import passportLocal from "passport-local"
 import bcrypt from 'bcryptjs'
 import { getConnection } from 'typeorm'
 
-import { User } from '../database/entities/user'
+import { User } from '../database/entities/User'
 import { ErrorHandler } from "../utils/errorHandler"
 
 const LocalStrategy = passportLocal.Strategy

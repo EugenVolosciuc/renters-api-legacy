@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { getConnection } from 'typeorm'
 import passport from 'passport'
 
-import { User } from '../database/entities/user'
+import { User } from '../database/entities/User'
 import { ErrorHandler } from '../utils/errorHandler'
 import { SESSION_COOKIE_NAME } from '../config/passport'
 import { getHostname } from '../utils/getHostname'

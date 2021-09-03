@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, CreateDateColumn } from 'typeorm'
 
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
-import { Property } from './property'
-import { User } from './user'
+import { Property } from './Property'
+import { User } from './User'
 
 @Entity()
 export class Contract {

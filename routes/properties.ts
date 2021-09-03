@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { auth } from '../middleware/auth'
-import { USER_ROLES } from '../database/entities/user'
+import { USER_ROLES } from '../database/entities/User'
 import {
     createProperty,
     getPropertyByID,

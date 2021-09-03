@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, ManyToOne, JoinColumn } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, ManyToOne, CreateDateColumn } from 'typeorm'
 import { IsUrl } from 'class-validator'
 
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
-import { Property } from './property';
+import { Property } from './Property';
+import { Bill } from './Bill';
 
 export enum PHOTO_TYPE {
     PROPERTY = "PROPERTY",
@@ -38,10 +39,15 @@ export class Photo {
     @Column()
     title: string;
 
+    @CreateDateColumn()
+    createdAt: Date;
+
     @ManyToOne(() => Property, property => property.photos, { nullable: true })
     property: Property;
 
     // TODO: add bill relation here
+    @ManyToOne(() => Bill, bill => bill.photos, { nullable: true })
+    bill: Bill;
 
     @BeforeInsert()
     async validatePhoto() {

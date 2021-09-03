@@ -6,7 +6,7 @@ import {
 } from '../controllers/photos'
 import { auth } from '../middleware/auth'
 import { upload } from '../config/multer'
-import { PHOTO_TYPE } from '../database/entities/photo'
+import { PHOTO_TYPE } from '../database/entities/Photo'
 
 const router = express.Router()
 

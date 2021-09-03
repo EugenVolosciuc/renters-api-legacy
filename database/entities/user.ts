@@ -3,7 +3,7 @@ import { IsEmail } from 'class-validator'
 import bcrypt from 'bcryptjs'
 
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
-import { Property } from './property';
+import { Property } from './Property';
 
 export enum USER_ROLES {
     SUPER_ADMIN = "SUPER_ADMIN",

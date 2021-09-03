@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import { getConnection } from 'typeorm'
 
-import { Property } from '../database/entities/property'
-import { User, USER_ROLES } from '../database/entities/user'
+import { Property } from '../database/entities/Property'
+import { User, USER_ROLES } from '../database/entities/User'
 import { ErrorHandler } from '../utils/errorHandler'
 
 // @desc    Get paginated properties of logged in user

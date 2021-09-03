@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { User, USER_ROLES } from '../database/entities/user'
+import { User, USER_ROLES } from '../database/entities/User'
 import { ErrorHandler } from '../utils/errorHandler';
 
 export const auth = (acceptedRoles?: USER_ROLES[]) => {

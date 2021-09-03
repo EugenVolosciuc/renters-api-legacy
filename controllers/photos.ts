@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { getConnection } from 'typeorm'
 import * as fs from 'fs/promises'
 
-import { Photo, PhotoData } from '../database/entities/photo'
+import { Photo, PhotoData } from '../database/entities/Photo'
 import { cloudinary } from '../config/cloudinary'
 
 // @desc    Upload photo

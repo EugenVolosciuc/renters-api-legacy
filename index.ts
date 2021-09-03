@@ -12,6 +12,7 @@ import { connect } from './database/connect'
 import { handleError } from './utils/errorHandler'
 import { initializePassport, SESSION_COOKIE_NAME } from './config/passport'
 import { configureCloudinary } from './config/cloudinary'
+import { initializeCronJobs } from './cron'
 
 require('dotenv').config()
 
@@ -68,12 +69,15 @@ const RedisStore = connectRedis(session);
 
     await connect()
 
+    await initializeCronJobs()
+
     // AUTH
     app.use(passport.initialize())
     app.use(passport.session())
     initializePassport()
 
     // ROUTES
+    app.use('/admin', routes.adminRoutes)
     app.use('/users', routes.userRoutes)
     app.use('/properties', routes.propertyRoutes)
     app.use('/photos', routes.photoRoutes)
