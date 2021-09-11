@@ -6,6 +6,7 @@ import { User } from '../database/entities/User'
 import { ErrorHandler } from '../utils/errorHandler'
 import { SESSION_COOKIE_NAME } from '../config/passport'
 import { getHostname } from '../utils/getHostname'
+import Mail from '../config/mail'
 
 // @desc    Get logged in user
 // @route   GET /users/me
@@ -44,6 +45,8 @@ export const createUser = async (req: Request<{}, {}, User>, res: Response, next
 
         const user = userRepository.create(req.body)
         const results = await userRepository.save(user)
+
+        await Mail.sendWelcomeEmail({ name: user.firstName, to: user.email })
 
         return res.status(201).send(results)
     } catch (error) {

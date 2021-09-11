@@ -12,6 +12,7 @@ import { connect } from './database/connect'
 import { handleError } from './utils/errorHandler'
 import { initializePassport, SESSION_COOKIE_NAME } from './config/passport'
 import { configureCloudinary } from './config/cloudinary'
+import Mail from './config/mail'
 import { initializeCronJobs } from './cron'
 
 require('dotenv').config()
@@ -28,6 +29,9 @@ const RedisStore = connectRedis(session);
 
     // Cloudinary
     configureCloudinary()
+
+    // Mail
+    Mail.configureMail()
 
     // Redis config
     let redisClient: RedisClient
