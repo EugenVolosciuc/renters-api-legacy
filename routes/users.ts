@@ -6,15 +6,17 @@ import {
     getLoggedInUser,
     loginUser,
     logoutUser,
+    modifyUserDetails
 } from '../controllers/users'
 import { auth } from '../middleware/auth'
 
 const router = express.Router()
 
-router.post('/', createUser)
 router.get('/me', auth(), getLoggedInUser)
 router.get('/:id', getUserByID)
+router.post('/', createUser)
 router.post('/login', loginUser)
 router.post('/logout', logoutUser)
+router.patch('/me', auth(), modifyUserDetails)
 
 export default router

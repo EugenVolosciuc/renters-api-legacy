@@ -86,6 +86,22 @@ export const logoutUser = async (req: Request, res: Response, _next: NextFunctio
     res.json()
 }
 
-export const modifyUser = async (req: Request, res: Response, next: NextFunction) => {
+// @desc    Modify authed user's details
+// @route   PATCH /users/me
+// @access  Private
+export const modifyUserDetails = async (req: Request, res: Response, next: NextFunction) => {
+    const userRepository = getConnection().getRepository(User)
+    const { user, body } = req
 
+    try {
+        await userRepository.update(
+            { id: (user as User).id },
+            { ...body }
+        )
+        const updatedUser = await userRepository.findOne((user as User).id)
+
+        res.send(updatedUser)
+    } catch (error) {
+        next(error)
+    }
 }
