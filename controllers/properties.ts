@@ -97,10 +97,9 @@ export const modifyProperty = async (req: Request, res: Response, next: NextFunc
             throw new ErrorHandler(401, 'You cannot modify this property')
         }
 
-        await propertyRepository.update(propertyID, req.body)
-        const updatedProperty = { ...property, ...req.body }
+        const result = await propertyRepository.save({ ...property, ...req.body })
 
-        return res.send(updatedProperty)
+        return res.send(result)
     } catch (error) {
         next(error)
     }
