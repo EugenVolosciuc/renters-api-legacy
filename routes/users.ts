@@ -7,7 +7,8 @@ import {
     loginUser,
     logoutUser,
     modifyUserDetails,
-    sendSignupInvitationToRenter
+    sendSignupInvitationToRenter,
+    getInvitationData
 } from '../controllers/users'
 import { USER_ROLES } from '../database/entities/User'
 import { auth } from '../middleware/auth'
@@ -16,6 +17,7 @@ const router = express.Router()
 
 router.get('/me', auth(), getLoggedInUser)
 router.get('/:id', getUserByID)
+router.get('/invitation-data/:inviteId', getInvitationData)
 router.post('/', createUser)
 router.post('/login', loginUser)
 router.post('/logout', logoutUser)

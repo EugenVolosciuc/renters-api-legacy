@@ -2,13 +2,15 @@ import { Request, Response, NextFunction } from 'express'
 import { getConnection } from 'typeorm'
 import passport from 'passport'
 import dayjs from 'dayjs'
+import jwt from 'jsonwebtoken'
 
 import { User } from '../database/entities/User'
 import { ErrorHandler } from '../utils/errorHandler'
 import { SESSION_COOKIE_NAME } from '../config/passport'
 import { getHostname } from '../utils/getHostname'
 import Mail from '../config/mail'
-import { encrypt, decrypt } from '../utils/crypto'
+import { splitName } from '../utils/splitName'
+import { Property } from '../database/entities/Property'
 
 // @desc    Get logged in user
 // @route   GET /users/me
@@ -116,7 +118,7 @@ export const modifyUserDetails = async (req: Request, res: Response, next: NextF
 // @access  Private
 export const sendSignupInvitationToRenter = async (req: Request, res: Response, next: NextFunction) => {
     const { user, body } = req
-    const { renterEmail, renterFirstName, propertyId } = body
+    const { renterEmail, renterName, propertyId, propertyType, propertyTitle } = body
     const userRepository = getConnection().getRepository(User)
 
     try {
@@ -127,18 +129,47 @@ export const sendSignupInvitationToRenter = async (req: Request, res: Response, 
             // TODO: add case where renter already has an account
         } else {
             const deadline = dayjs().add(Mail.acceptInvitationDeadline, 'seconds').unix()
-            const inviteId = encrypt(`${renterEmail}.${renterFirstName}.${propertyId}.${deadline}`)
+            const inviteId = jwt.sign(
+                { renterEmail, renterName, propertyId, deadline }, 
+                process.env.JWT_SECRET,
+                { expiresIn: '3 days' }
+            )
 
             const propertyAdmin = `${(user as User).firstName} ${(user as User).lastName}`
 
             await Mail.sendRenterInvitationToCreateAccount({
-                ...body,
+                renterEmail,
+                propertyType,
+                propertyTitle,
+                renterFirstName: splitName(renterName).firstName,
                 propertyAdmin,
                 inviteId
             })
         }
 
         res.send()
+    } catch (error) {
+        next(error)
+    }
+}
+
+// @desc    Send renting invitation to renter
+// @route   GET /users/invitation-data/:inviteId
+// @access  Public
+export const getInvitationData = async (req: Request, res: Response, next: NextFunction) => {
+    const { params: { inviteId } } = req
+    const propertyRepository = getConnection().getRepository(Property)
+
+    try {
+        jwt.verify(inviteId, process.env.JWT_SECRET, async function(err, decoded) {
+            if (err) throw new ErrorHandler(401, 'Token invalid')
+
+            const { renterEmail, renterName, propertyId } = decoded
+
+            const property = await propertyRepository.findOne(propertyId)
+
+            return res.send({property, renterEmail, renterName })
+        })
     } catch (error) {
         next(error)
     }
