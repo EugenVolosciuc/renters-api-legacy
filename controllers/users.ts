@@ -130,7 +130,7 @@ export const sendSignupInvitationToRenter = async (req: Request, res: Response, 
         } else {
             const deadline = dayjs().add(Mail.acceptInvitationDeadline, 'seconds').unix()
             const inviteId = jwt.sign(
-                { renterEmail, renterName, propertyId, deadline }, 
+                { renterEmail, renterName, propertyId, deadline },
                 process.env.JWT_SECRET,
                 { expiresIn: '3 days' }
             )
@@ -161,14 +161,14 @@ export const getInvitationData = async (req: Request, res: Response, next: NextF
     const propertyRepository = getConnection().getRepository(Property)
 
     try {
-        jwt.verify(inviteId, process.env.JWT_SECRET, async function(err, decoded) {
+        jwt.verify(inviteId, process.env.JWT_SECRET, async function (err, decoded) {
             if (err) throw new ErrorHandler(401, 'Token invalid')
 
             const { renterEmail, renterName, propertyId } = decoded
 
-            const property = await propertyRepository.findOne(propertyId)
+            const property = await propertyRepository.findOne(propertyId, { relations: ['administrator'] })
 
-            return res.send({property, renterEmail, renterName })
+            return res.send({ property, renterEmail, renterName })
         })
     } catch (error) {
         next(error)
