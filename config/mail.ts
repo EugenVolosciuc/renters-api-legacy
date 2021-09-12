@@ -3,7 +3,7 @@ import sgMail, { MailDataRequired } from '@sendgrid/mail'
 class Mail {
     private static from: { email: string, name: string }
     private static clientAppBaseURL: string
-    static acceptInvitationDeadline = 1 * 86400 * 1000 // 1 day in milliseconds
+    static acceptInvitationDeadline = 1 * 86400 // 1 day in seconds
 
     static configureMail() {
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -36,23 +36,30 @@ class Mail {
     }
 
     static async sendRenterInvitationToCreateAccount({
-        renterName,
+        renterFirstName,
+        renterEmail,
         propertyAdmin,
         propertyType,
         propertyTitle,
-        invite_id,
-        to
-    }: Record<string, string>) {
+        inviteId
+    }: {
+        renterFirstName: string,
+        renterEmail: string,
+        propertyAdmin: string,
+        propertyType: string,
+        propertyTitle: string,
+        inviteId: string
+    }) {
         const msg: MailDataRequired = {
             from: Mail.from,
-            to,
+            to: renterEmail,
             templateId: 'd-de2873c63e0e41108dc200660e857b6d',
             dynamicTemplateData: {
-                renterName,
+                renterFirstName,
                 propertyAdmin,
                 propertyType,
                 propertyTitle,
-                confirmUrl: `${Mail.clientAppBaseURL}/auth/accept-renter-invite?invite_id=${invite_id}` // invite_id = renter email + renter name + deadline
+                confirmUrl: `${Mail.clientAppBaseURL}/auth/accept-renter-invite?invite_id=${inviteId}` // invite_id = renter email + renter first name + property_id + deadline
             }
         }
 

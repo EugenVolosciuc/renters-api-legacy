@@ -1,12 +1,14 @@
 import { Request, Response, NextFunction } from 'express'
 import { getConnection } from 'typeorm'
 import passport from 'passport'
+import dayjs from 'dayjs'
 
 import { User } from '../database/entities/User'
 import { ErrorHandler } from '../utils/errorHandler'
 import { SESSION_COOKIE_NAME } from '../config/passport'
 import { getHostname } from '../utils/getHostname'
 import Mail from '../config/mail'
+import { encrypt, decrypt } from '../utils/crypto'
 
 // @desc    Get logged in user
 // @route   GET /users/me
@@ -104,6 +106,39 @@ export const modifyUserDetails = async (req: Request, res: Response, next: NextF
         const updatedUser = await userRepository.findOne((user as User).id)
 
         res.send(updatedUser)
+    } catch (error) {
+        next(error)
+    }
+}
+
+// @desc    Send renting invitation to renter
+// @route   POST /users/renter-invite
+// @access  Private
+export const sendSignupInvitationToRenter = async (req: Request, res: Response, next: NextFunction) => {
+    const { user, body } = req
+    const { renterEmail, renterFirstName, propertyId } = body
+    const userRepository = getConnection().getRepository(User)
+
+    try {
+        const renterAccountAlreadyExists = await userRepository.findOne({ email: body.renterEmail })
+
+        if (renterAccountAlreadyExists) {
+            console.log('not yet implemented')
+            // TODO: add case where renter already has an account
+        } else {
+            const deadline = dayjs().add(Mail.acceptInvitationDeadline, 'seconds').unix()
+            const inviteId = encrypt(`${renterEmail}.${renterFirstName}.${propertyId}.${deadline}`)
+
+            const propertyAdmin = `${(user as User).firstName} ${(user as User).lastName}`
+
+            await Mail.sendRenterInvitationToCreateAccount({
+                ...body,
+                propertyAdmin,
+                inviteId
+            })
+        }
+
+        res.send()
     } catch (error) {
         next(error)
     }
