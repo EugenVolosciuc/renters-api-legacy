@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, CreateDateColumn } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, CreateDateColumn, OneToMany } from 'typeorm'
 
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
 import { Property } from './Property'
@@ -12,19 +12,22 @@ export class Contract {
     @CreateDateColumn()
     createdAt: Date;
 
-    @OneToOne(() => User)
+    @OneToOne(() => User, { nullable: true })
     renter: User;
 
-    @OneToOne(() => User)
-    propertyOwner: User;
-
-    @OneToOne(() => Property)
+    @OneToMany(() => Property, property => property.contracts)
     property: Property;
 
-    @Column({ type: "date" })
-    rentData: Date;
+    @Column()
+    propertyId: number;
 
     @Column()
+    dueDate: number;
+
+    @Column({ type: "date" })
+    expirationDate: Date;
+
+    @Column({ nullable: true })
     url: string;
 
     @BeforeInsert()

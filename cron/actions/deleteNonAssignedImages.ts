@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 
 import { Photo } from '../../database/entities/Photo'
 import { cloudinary } from '../../config/cloudinary'
+import { DB_TIME_FORMAT } from '../../constants/DB_TIME_FORMAT'
 
 export const deleteNonAssignedImages = async () => {
     try {
@@ -18,7 +19,7 @@ export const deleteNonAssignedImages = async () => {
             .addSelect('photo.public_id')
             .where("photo.propertyId IS NULL")
             .orWhere("photo.billId IS NULL") 
-            .andWhere(`photo.createdAt <= TO_TIMESTAMP('${sevenHoursAgo}', 'YYYY-MM-DD HH24:MI:SS')`)
+            .andWhere(`photo.createdAt <= TO_TIMESTAMP('${sevenHoursAgo}', '${DB_TIME_FORMAT}')`)
             .getMany()
     
         if (result.length > 0) {

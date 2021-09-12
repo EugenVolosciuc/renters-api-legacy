@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, JoinColumn, OneToMany, ManyToOne } from 'typeorm'
 
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
 import { User } from './User'
 import { Photo } from './Photo'
 import { Bill, BILL_TYPES } from './Bill'
+import { Contract } from './Contract'
 
 export enum PROPERTY_TYPES {
     HOUSE = "HOUSE",
@@ -51,12 +52,17 @@ export class Property {
     @Column()
     administratorId: number;
 
-    @OneToOne(() => User, { nullable: true })
-    @JoinColumn()
-    renter: User;
+    // NOTE: Don't think this is needed, we'll see
+    // @OneToOne(() => User, { nullable: true })
+    // @JoinColumn()
+    // renter: User;
 
-    @Column({ nullable: true })
-    renterId: number;
+    // @Column({ nullable: true })
+    // renterId: number;
+
+    @ManyToOne(() => Contract, contract => contract.property)
+    @JoinColumn()
+    contracts: Contract[];
 
     @Column({ 
         enum: BILL_TYPES, 

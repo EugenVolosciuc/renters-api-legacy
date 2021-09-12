@@ -1,0 +1,1 @@
+export const DB_TIME_FORMAT = 'YYYY-MM-DD HH24:MI:SS'
