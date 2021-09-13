@@ -10,7 +10,7 @@ import { SESSION_COOKIE_NAME } from '../config/passport'
 import { getHostname } from '../utils/getHostname'
 import Mail from '../config/mail'
 import { splitName } from '../utils/splitName'
-import { Property } from '../database/entities/Property'
+import { Contract } from '../database/entities/Contract'
 
 // @desc    Get logged in user
 // @route   GET /users/me
@@ -118,7 +118,7 @@ export const modifyUserDetails = async (req: Request, res: Response, next: NextF
 // @access  Private
 export const sendSignupInvitationToRenter = async (req: Request, res: Response, next: NextFunction) => {
     const { user, body } = req
-    const { renterEmail, renterName, propertyId, propertyType, propertyTitle } = body
+    const { renterEmail, renterName, propertyType, propertyTitle, contractId } = body
     const userRepository = getConnection().getRepository(User)
 
     try {
@@ -130,7 +130,7 @@ export const sendSignupInvitationToRenter = async (req: Request, res: Response, 
         } else {
             const deadline = dayjs().add(Mail.acceptInvitationDeadline, 'seconds').unix()
             const inviteId = jwt.sign(
-                { renterEmail, renterName, propertyId, deadline },
+                { renterEmail, renterName, contractId, deadline },
                 process.env.JWT_SECRET,
                 { expiresIn: '3 days' }
             )
@@ -158,17 +158,20 @@ export const sendSignupInvitationToRenter = async (req: Request, res: Response, 
 // @access  Public
 export const getInvitationData = async (req: Request, res: Response, next: NextFunction) => {
     const { params: { inviteId } } = req
-    const propertyRepository = getConnection().getRepository(Property)
+    const contractRepository = getConnection().getRepository(Contract)
 
     try {
         jwt.verify(inviteId, process.env.JWT_SECRET, async function (err, decoded) {
             if (err) throw new ErrorHandler(401, 'Token invalid')
 
-            const { renterEmail, renterName, propertyId } = decoded
+            const { renterEmail, renterName, contractId } = decoded
 
-            const property = await propertyRepository.findOne(propertyId, { relations: ['administrator'] })
+            const contract = await contractRepository.findOne(
+                contractId, 
+                { relations: ['property', 'property.administrator']}
+            )
 
-            return res.send({ property, renterEmail, renterName })
+            return res.send({ contract, renterEmail, renterName })
         })
     } catch (error) {
         next(error)
