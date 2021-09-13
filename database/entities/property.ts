@@ -60,8 +60,7 @@ export class Property {
     // @Column({ nullable: true })
     // renterId: number;
 
-    @ManyToOne(() => Contract, contract => contract.property)
-    @JoinColumn()
+    @OneToMany(() => Contract, contract => contract.property)
     contracts: Contract[];
 
     @Column({ 

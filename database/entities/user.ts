@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, CreateDateColumn, UpdateDateColumn, OneToMany, OneToOne, JoinColumn } from 'typeorm'
 import { IsEmail } from 'class-validator'
 import bcrypt from 'bcryptjs'
 
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
 import { Property } from './Property';
+import { Contract } from './Contract';
 
 export enum USER_ROLES {
     SUPER_ADMIN = "SUPER_ADMIN",
@@ -43,6 +44,10 @@ export class User {
 
     @OneToMany(() => Property, property => property.administrator, { cascade: true, nullable: true })
     administratedProperties: Property[];
+
+    @OneToOne(() => Contract, rentContract => rentContract.renter , { nullable: true })
+    @JoinColumn()
+    rentContract: Contract;
 
     @BeforeInsert()
     async hashPassword() {
