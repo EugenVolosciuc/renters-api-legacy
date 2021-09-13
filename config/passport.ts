@@ -19,9 +19,8 @@ export const initializePassport = function () {
             try {
                 const user = await userRepository
                     .createQueryBuilder("user")
-                    .select('user')
-                    .leftJoinAndSelect('user.rentContract', 'rentContract')
                     .addSelect('user.password')
+                    .leftJoinAndSelect('user.rentContract', 'rentContract')
                     .where("user.email = :email", { email })
                     .getOneOrFail()
 
@@ -44,7 +43,11 @@ export const initializePassport = function () {
 
     passport.deserializeUser(async (email: any, done: any) => {
         try {
-            const user = await userRepository.findOne({ email })
+            const user = await userRepository.findOne(
+                { email }, 
+                { relations: ['rentContract'] }
+            )
+
             done(null, user)
         } catch (error) {
             done(error, false)
