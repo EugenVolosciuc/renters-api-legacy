@@ -13,13 +13,14 @@ export class Contract {
     createdAt: Date;
 
     @OneToOne(() => User, renter => renter.rentContract, { nullable: true })
-    @JoinColumn()
+    @JoinColumn({ name: 'renterId' })
     renter: User;
 
     @Column({ nullable: true })
     renterId: number;
 
     @ManyToOne(() => Property, property => property.contracts)
+    @JoinColumn({ name: 'propertyId' })
     property: Property;
 
     @Column()

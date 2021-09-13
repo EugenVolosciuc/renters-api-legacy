@@ -20,6 +20,7 @@ export const initializePassport = function () {
                 const user = await userRepository
                     .createQueryBuilder("user")
                     .select('user')
+                    .leftJoinAndSelect('user.rentContract', 'rentContract')
                     .addSelect('user.password')
                     .where("user.email = :email", { email })
                     .getOneOrFail()
