@@ -29,6 +29,9 @@ export class Contract {
     @Column()
     dueDate: number;
 
+    @Column({ type: "date", default: new Date() })
+    startDate: Date;
+
     @Column({ type: "date" })
     expirationDate: Date;
 

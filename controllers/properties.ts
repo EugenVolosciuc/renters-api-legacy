@@ -54,7 +54,7 @@ export const getPropertyByID = async (req: Request, res: Response, next: NextFun
         // TODO: add current contract
         const property = await propertyRepository.findOne(
             req.params.id,
-            { relations: ['administrator', 'photos'] }
+            { relations: ['administrator', 'photos', 'contracts', 'contracts.renter'] }
         )
 
         if (!property) throw new ErrorHandler(404, `Could not find property with id ${req.params.id}`)
