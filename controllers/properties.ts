@@ -51,7 +51,6 @@ export const getPropertyByID = async (req: Request, res: Response, next: NextFun
     try {
         const propertyRepository = getConnection().getRepository(Property)
 
-        // TODO: add current contract
         const property = await propertyRepository.findOne(
             req.params.id,
             { relations: ['administrator', 'photos', 'contracts', 'contracts.renter'] }

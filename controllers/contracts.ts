@@ -24,6 +24,7 @@ export const createContract = async (req: Request, res: Response, next: NextFunc
             .createQueryBuilder('contract')
             .where('contract.propertyId = :propertyId', { propertyId })
             .andWhere(`contract.expirationDate > TO_TIMESTAMP('${currentTime}', '${DB_TIME_FORMAT}')`)
+            .andWhere('contract.renterId IS NOT NULL')
             .getOne()
 
         if (currentContract) throw new ErrorHandler(400, 'There is already an active contract for this property')

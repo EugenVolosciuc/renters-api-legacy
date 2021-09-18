@@ -126,7 +126,7 @@ export const sendSignupInvitationToRenter = async (req: Request, res: Response, 
 
         if (renterAccountAlreadyExists) {
             console.log('not yet implemented')
-            // TODO: add case where renter already has an account
+            // TODO: add case where renter already has an account (need general email template first)
         } else {
             const deadline = dayjs().add(Mail.acceptInvitationDeadline, 'seconds').unix()
             const inviteId = jwt.sign(
