@@ -75,13 +75,13 @@ export const modifyContract = async (req: Request, res: Response, next: NextFunc
         if (!contract) throw new ErrorHandler(404, `Could not find contract with id ${params.id}`)
 
         // Check if user can modify property
-        if (contract.renterId !== authedUserId || contract.property.administratorId !== authedUserId) {
+        if (contract.renterId === authedUserId || contract.property.administratorId === authedUserId) {
+            const result = await contractRepository.save({ ...contract, ...body })
+
+            return res.send(result)
+        } else {
             throw new ErrorHandler(401, 'You cannot modify this contract')
         }
-
-        const result = await contractRepository.save({ ...contract, ...body })
-
-        return res.send(result)
     } catch (error) {
         next(error)
     }
