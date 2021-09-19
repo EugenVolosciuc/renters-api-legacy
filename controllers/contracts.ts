@@ -86,3 +86,32 @@ export const modifyContract = async (req: Request, res: Response, next: NextFunc
         next(error)
     }
 }
+
+// @desc    Delete a contract
+// @route   DELETE /contracts/:id
+// @access  PROPERTY_ADMIN
+export const deleteContract = async (req: Request, res: Response, next: NextFunction) => {
+    const { params } = req
+    const authedUserId = (req.user as User).id
+
+    try {
+        const contractRepository = getConnection().getRepository(Contract)
+        const userRepository = getConnection().getRepository(User)
+
+        const contract = await contractRepository.findOne(params.id, { relations: ['property'] })
+
+        if (!contract) throw new ErrorHandler(404, `Could not find contract with id ${params.id}`)
+
+        if (contract.property.administratorId !== authedUserId) {
+            throw new ErrorHandler(401, 'You cannot delete this contract')
+        }
+
+        if (contract.renterId) await userRepository.update(contract.renterId, { rentContract: null })
+
+        await contractRepository.remove(contract)
+
+        res.send()
+    } catch (error) {
+        next(error)
+    }
+}
