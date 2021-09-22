@@ -8,7 +8,8 @@ import {
     logoutUser,
     modifyUserDetails,
     sendSignupInvitationToRenter,
-    getInvitationData
+    getInvitationData,
+    getRentersOfPropertyAdmin
 } from '../controllers/users'
 import { USER_ROLES } from '../database/entities/User'
 import { auth } from '../middleware/auth'
@@ -16,6 +17,7 @@ import { auth } from '../middleware/auth'
 const router = express.Router()
 
 router.get('/me', auth(), getLoggedInUser)
+router.get('/renters', auth([USER_ROLES.PROPERTY_ADMIN]), getRentersOfPropertyAdmin)
 router.get('/:id', getUserByID)
 router.get('/invitation-data/:inviteId', getInvitationData)
 router.post('/', createUser)

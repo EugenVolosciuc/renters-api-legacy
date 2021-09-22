@@ -23,6 +23,29 @@ export const getLoggedInUser = async (req: Request, res: Response, next: NextFun
     }
 }
 
+// @desc    Get paginated list of authed property admin's renters
+// @route   GET /users/renters
+// @access  PROPERTY_ADMIN
+export const getRentersOfPropertyAdmin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const contractRepository = getConnection().getRepository(Contract)
+
+        const paginatedContracts = await contractRepository
+            .createQueryBuilder('contract')
+            .leftJoinAndSelect('contract.renter', 'renter')
+            .leftJoinAndSelect('contract.property', 'property',)
+            .where(
+                'property.administratorId = :administratorId',
+                { administratorId: (req.user as User).id }
+            )
+            .paginate()
+
+        res.send(paginatedContracts)
+    } catch (error) {
+        next(error)
+    }
+}
+
 // @desc    Get user by ID
 // @route   GET /users/:id
 // @access  Public
@@ -115,7 +138,7 @@ export const modifyUserDetails = async (req: Request, res: Response, next: NextF
 
 // @desc    Send renting invitation to renter
 // @route   POST /users/renter-invite
-// @access  Private
+// @access  PROPERTY_ADMIN
 export const sendSignupInvitationToRenter = async (req: Request, res: Response, next: NextFunction) => {
     const { user, body } = req
     const { renterEmail, renterName, propertyType, propertyTitle, contractId } = body
@@ -153,7 +176,7 @@ export const sendSignupInvitationToRenter = async (req: Request, res: Response, 
     }
 }
 
-// @desc    Send renting invitation to renter
+// @desc    Get renting invitation data
 // @route   GET /users/invitation-data/:inviteId
 // @access  Public
 export const getInvitationData = async (req: Request, res: Response, next: NextFunction) => {
@@ -167,8 +190,8 @@ export const getInvitationData = async (req: Request, res: Response, next: NextF
             const { renterEmail, renterName, contractId } = decoded
 
             const contract = await contractRepository.findOne(
-                contractId, 
-                { relations: ['property', 'property.administrator']}
+                contractId,
+                { relations: ['property', 'property.administrator'] }
             )
 
             return res.send({ contract, renterEmail, renterName })
