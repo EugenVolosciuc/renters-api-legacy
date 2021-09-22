@@ -10,7 +10,7 @@ import { ErrorHandler } from '../utils/errorHandler'
 // @desc    Get list of cron jobs
 // @route   GET /admin/cron-jobs
 // @access  SUPER_ADMIN
-export const getCronJobs = async (req: Request, res: Response, next: NextFunction) => {
+export const getCronJobs = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const cronJobRepository = getConnection().getRepository(CronJob)
 

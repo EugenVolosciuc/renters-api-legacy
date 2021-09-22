@@ -20,6 +20,13 @@ export const initializeCronJobs = async () => {
     const cronJobRepository = getConnection().getRepository(CronJob)
 
     try {
+        // Remove existing instances from DB
+        await cronJobRepository
+            .createQueryBuilder()
+            .delete()
+            .from(CronJob)
+            .execute()
+            
         // Save cron jobs to DB
         await cronJobRepository.save(cronJobList)
 
