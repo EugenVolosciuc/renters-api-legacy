@@ -85,6 +85,7 @@ const RedisStore = connectRedis(session);
     app.use('/users', routes.userRoutes)
     app.use('/properties', routes.propertyRoutes)
     app.use('/photos', routes.photoRoutes)
+    app.use('/documents', routes.documentRoutes)
     app.use('/contracts', routes.contractRoutes)
 
     // ERROR HANDLING

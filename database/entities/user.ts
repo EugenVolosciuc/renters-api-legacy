@@ -45,7 +45,7 @@ export class User {
     @OneToMany(() => Property, property => property.administrator, { cascade: true, nullable: true })
     administratedProperties: Property[];
 
-    @OneToOne(() => Contract, rentContract => rentContract.renter , { cascade: true, nullable: true })
+    @OneToOne(() => Contract, rentContract => rentContract.renter, { cascade: true, nullable: true })
     @JoinColumn({ name: 'rentContractId' })
     rentContract: Contract;
 

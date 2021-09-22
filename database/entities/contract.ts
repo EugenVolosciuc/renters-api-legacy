@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, CreateD
 import { validateEntityInstance } from '../../utils/validateEntityInstance'
 import { Property } from './Property'
 import { User } from './User'
+import { Document } from './Document'
 
 @Entity()
 export class Contract {
@@ -26,6 +27,13 @@ export class Contract {
     @Column()
     propertyId: number;
 
+    @OneToOne(() => Document, document => document.contract, { cascade: true, nullable: true })
+    @JoinColumn({ name: 'documentId' })
+    document: Document;
+
+    @Column({ nullable: true })
+    documentId: number;
+
     @Column()
     dueDate: number;
 
@@ -34,9 +42,6 @@ export class Contract {
 
     @Column({ type: "date" })
     expirationDate: Date;
-
-    @Column({ nullable: true })
-    url: string;
 
     @BeforeInsert()
     async validateContract() {
